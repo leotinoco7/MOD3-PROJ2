@@ -56,7 +56,7 @@ const deletePersonagemController = (req, res) => {
 
     const chosenPersonagem = personagensService.findPersonagensByIdService(idParam);
 
-    if (!chosenPersonagens) {
+    if (!chosenPersonagem) {
     return res.status(404).send({ message: "not found" })
   }
 
