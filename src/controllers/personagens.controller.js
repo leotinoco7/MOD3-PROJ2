@@ -1,75 +1,74 @@
-const personagensService = require('../services/personagens.service');
+const mongoose = require("mongoose");
+const personagensService = require("../services/personagens.service");
 
 const homePersonagemController = (req, res) => {
-    res.send('index');
+  res.send("index");
 };
 
-const findPersonagensController = (req, res) => {
-    const allPersonagens = personagensService.findPersonagensService();
-    res.send(allPersonagens);
-}
-
-const findPersonagemByIdController = (req, res) => {
-    const idParam = req.params.id;
-    const chosenPersonagem = personagensService.findPersonagemByIdService(idParam);
-    res.send(chosenPersonagem);
-}
-
-
-const addPersonagemController = (req, res) => {
-    const personagem = req.body;
-
-    if (
-        !personagem ||
-        !personagem.nome ||
-        !personagem.descricao ||
-        !personagem.habilidade ||
-        !personagem.foto
-      ) {
-        return res.status(400).send(
-          { message: "faltam dados"}
-        );
-      }
-      const newPersonagem = personagensService.addPersonagemService(personagem);
-      res.send(newPersonagem);
-}
-
-const updatePersonagemController = (req, res) => {
-    const idParam = +req.params.id;
-    const personagemEdit = req.body;
-
-    if (!personagemEdit || !personagemEdit.sabor || !personagemEdit.descricao || !personagemEdit.foto || !personagemEdit.preco) {
-        return res.status(400).send({ message: "faltam dados" });
-      }
-    
-      const chosenPersonagem = personagensService.findPersonagemByIdService(idParam);
-    
-      if (!chosenPersonagem) {
-        return res.status(404).send({ message: "not found" })
-      }
-      
-    res.send(updatedPersonagem);
+const findPersonagensController = async (req, res) => {
+  const allPersonagens = await personagensService.findPersonagensService();
+  res.send(allPersonagens);
 };
 
-const deletePersonagemController = (req, res) => {
-    const idParam = req.params.id;
+const findPersonagemByIdController = async (req, res) => {
+  const idParam = req.params.id;
 
-    const chosenPersonagem = personagensService.findPersonagensByIdService(idParam);
+  const chosenPersonagem = await personagensService.findPersonagemByIdService(
+    idParam
+  );
+  if (!chosenPersonagem) {
+    return res.status(404).send({ message: "personagem não encontrado" });
+  }
+  res.send(chosenPersonagem);
+};
 
-    if (!chosenPersonagem) {
-    return res.status(404).send({ message: "not found" })
+const addPersonagemController = async (req, res) => {
+  const personagem = req.body;
+
+  const newPersonagem = await personagensService.addPersonagemService(
+    personagem
+  );
+  res.send(newPersonagem);
+};
+
+const updatePersonagemController = async (req, res) => {
+  const idParam = +req.params.id;
+  const personagemEdit = req.body;
+
+  const chosenPersonagem = await personagensService.findPersonagemByIdService(
+    idParam
+  );
+
+  if (!chosenPersonagem) {
+    return res.status(400).send({ message: "faltam dados" });
   }
 
-    personagensService.deletePersonagemService(idParam);
-    res.send({ message: 'deletado com sucesso!' });
+  const updatedPersonagem = await personagensService.updatePersonagemService(
+    idParam,
+    personagemEdit
+  );
+  res.send(updatedPersonagem);
 };
 
+const deletePersonagemController = async (req, res) => {
+  const idParam = req.params.id;
+
+  const chosenPersonagem =
+    personagensService.findPersonagemByIdService(idParam);
+
+  if (!chosenPersonagem) {
+    return res.status(404).send({ message: "personagem não encontrado!" });
+  }
+
+  await personagensService.deletePersonagemService(idParam);
+  res.send({ message: "personagem deletado com sucesso!" });
+};
 
 module.exports = {
-    homePersonagemController,
-    findPersonagensController,
-    findPersonagemByIdController,
-    addPersonagemController,
-    updatePersonagemController,
-    deletePersonagemController,
+  homePersonagemController,
+  findPersonagensController,
+  findPersonagemByIdController,
+  addPersonagemController,
+  updatePersonagemController,
+  deletePersonagemController,
 };
