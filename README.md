@@ -2,9 +2,6 @@
 
 Projeto para construir o back-end no modelo CRUD de um cadastro de personagens, dessa vez utilizando o Moongose como Database.
 
-## 🚀 Começando
-
-Inserir deploy aqui
 
 ### 📋 Pré-requisitos
 
