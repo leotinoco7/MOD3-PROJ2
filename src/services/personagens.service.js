@@ -18,7 +18,7 @@ const addPersonagemService = async (newPersonagem) => {
 const updatePersonagemService = async (id, personagemEdited) => {
   const personagemAtualizado = await Personagem.findByIdAndUpdate(
     id,
-    personmagemEdited
+    personagemEdited
   );
   return [personagemAtualizado, personagemEdited];
 };
